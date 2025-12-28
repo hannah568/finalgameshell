@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Mystic Shells</title>
+
+<style>
+body {
+    margin: 0;
+    height: 100vh;
+    background: #020617;
+    color: #f8fafc;
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+h1 {
+    color: gold;
+    margin-bottom: 40px;
+}
+
+#game-area {
+    position: relative;
+    width: 420px;
+    height: 200px;
+}
+
+.cup {
+    position: absolute;
+    width: 110px;
+    height: 150px;
+    background: #1e293b;
+    border-top: 6px solid #475569;
+    border-radius: 70px 70px 0 0;
+    cursor: pointer;
+    transition: left 0.4s ease, transform 0.4s ease;
+}
+
+.cup.lift {
+    transform: translateY(-100px);
+}
+
+.ball {
+    position: absolute;
+    bottom: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 35px;
+    height: 35px;
+    background: gold;
+    border-radius: 50%;
+    display: none;
+}
+
+#controls {
+    margin-top: 40px;
+    text-align: center;
+}
+
+button {
+    padding: 10px 28px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 20px;
+    border: none;
+    background: goldenrod;
+    cursor: pointer;
+}
+
+button:hover {
+    background: gold;
+}
+
+#status {
+    margin-top: 15px;
+    font-weight: bold;
+}
+</style>
+</head>
+
+<body>
+
+<h1>MYSTIC SHELLS</h1>
+
+<div id="game-area"></div>
+
+<div id="controls">
+    <button id="startBtn">START GAME</button>
+    <div id="status"></div>
+</div>
+
+<script>
+let slots = [0, 1, 2];
+const ballCupId = 1;
+let canPick = false;
+let shuffling = false;
+
+const positions = [0, 155, 310];
+const gameArea = document.getElementById("game-area");
+const startBtn = document.getElementById("startBtn");
+const status = document.getElementById("status");
+
+function initGame() {
+    gameArea.innerHTML = "";
+    slots = [0, 1, 2];
+    canPick = false;
+    status.textContent = "";
+
+    slots.forEach((id, i) => {
+        const cup = document.createElement("div");
+        cup.className = "cup";
+        cup.style.left = positions[i] + "px";
+        cup.style.bottom = "0px";
+        cup.id = "cup-" + id;
+
+        if (id === ballCupId) {
+            const ball = document.createElement("div");
+            ball.className = "ball";
+            cup.appendChild(ball);
+        }
+
+        cup.onclick = () => pickCup(id);
+        gameArea.appendChild(cup);
+    });
+}
+
+async function shuffle() {
+    if (shuffling) return;
+    shuffling = true;
+    startBtn.style.display = "none";
+    status.textContent = "WATCH CLOSELY";
+
+    for (let i = 0; i < 6; i++) {
+        let a = Math.floor(Math.random() * 3);
+        let b = Math.floor(Math.random() * 3);
+        while (a === b) b = Math.floor(Math.random() * 3);
+
+        [slots[a], slots[b]] = [slots[b], slots[a]];
+
+        slots.forEach((id, index) => {
+            document.getElementById("cup-" + id).style.left =
+                positions[index] + "px";
+        });
+
+        await new Promise(r => setTimeout(r, 400));
+    }
+
+    status.textContent = "PICK A CUP";
+    canPick = true;
+    shuffling = false;
+}
+
+function pickCup(id) {
+    if (!canPick) return;
+    canPick = false;
+
+    document.querySelectorAll(".cup").forEach(cup => {
+        cup.classList.add("lift");
+        const ball = cup.querySelector(".ball");
+        if (ball) ball.style.display = "block";
+    });
+
+    status.textContent =
+        id === ballCupId ? "YOU WIN!" : "WRONG CUP!";
+
+    setTimeout(() => {
+        startBtn.textContent = "PLAY AGAIN";
+        startBtn.style.display = "inline-block";
+    }, 1500);
+}
+
+startBtn.onclick = () => {
+    initGame();
+    shuffle();
+};
+
+initGame();
+</script>
+
+</body>
+</html>
