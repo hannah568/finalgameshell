@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mystic Shell Shuffle</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<!-- Background decorative lights -->
+<div class="market-lights" aria-hidden="true">
+    <div class="light" style="left:5%; top:10%; animation-duration:14s"></div>
+    <div class="light" style="left:75%; top:5%; width:300px; height:300px; animation-duration:18s"></div>
+    <div class="light" style="left:40%; top:55%; width:260px; height:260px; animation-duration:16s"></div>
+</div>
+
+<!-- Menu Screen -->
+<div id="menu-screen">
+    <div class="menu-container">
+        <h2>Mystic Shell Shuffle</h2>
+        <div class="menu-tabs">
+            <div class="menu-tab active" data-mode="game">Start Game</div>
+            <div class="menu-tab" data-mode="tutorial">Tutorial</div>
+            <div class="menu-tab" data-mode="ai">Game with AI</div>
+        </div>
+    </div>
+</div>
+
+<!-- Game Screen -->
+<div id="game-screen">
+    <h1>MYSTIC SHELL SHUFFLE</h1>
+    <div id="game-area"></div>
+    <div id="controls">
+        <button id="startBtn">START GAME</button>
+        <div class="difficulty" aria-hidden="false">
+            <label for="difficulty">Difficulty:</label>
+            <select id="difficulty" aria-label="Choose difficulty">
+                <option value="easy">Easy</option>
+                <option value="medium" selected>Medium</option>
+                <option value="hard">Hard</option>
+            </select>
+        </div>
+        <div id="status" aria-live="polite"></div>
+        <button id="back-btn">Back to Menu</button>
+    </div>
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>

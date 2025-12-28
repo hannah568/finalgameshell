@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Mystic Shells</title>
+
+<style>
+body {
+    margin: 0;
+    height: 100vh;
+    background: radial-gradient(ellipse at 20% 10%, rgba(255,180,100,0.06) 0%, transparent 20%),
+                radial-gradient(ellipse at 80% 30%, rgba(255,80,120,0.04) 0%, transparent 15%),
+                linear-gradient(180deg, #0b074d 0%, #0d2b6d 60%);
+    color: #f1f5f9;
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow-x: hidden;
+}
+
+h1 {
+    color: #c7a147;
+    text-transform: uppercase;
+    letter-spacing: 8px;
+    font-size: 56px;
+    font-weight: 900;
+    text-shadow: 0 2px 8px rgba(76, 22, 22, 0.6), 0 0 14px rgba(255,200,90,0.12);
+    margin-bottom: 40px;
+    margin-top: 0;
+    z-index: 10;
+}
+
+/* Night-market decorative lights */
+.market-lights {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+}
+.light {
+    position: absolute;
+    width: 220px;
+    height: 220px;
+    background: radial-gradient(circle at 30% 30%, rgba(255,200,90,0.25), rgba(255,80,120,0.06) 40%, transparent 60%);
+    filter: blur(40px);
+    opacity: 0.9;
+    animation: float 12s ease-in-out infinite;
+}
+@keyframes float {
+    0% { transform: translateY(0) translateX(0) scale(1); }
+    50% { transform: translateY(-40px) translateX(30px) scale(1.05); }
+    100% { transform: translateY(0) translateX(0) scale(1); }
+}
+
+/* Menu Screen */
+#menu-screen {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(ellipse at 20% 10%, rgba(255,180,100,0.06) 0%, transparent 20%),
+                radial-gradient(ellipse at 80% 30%, rgba(255,80,120,0.04) 0%, transparent 15%),
+                linear-gradient(180deg, #070617 0%, #07122a 60%);
+    backdrop-filter: blur(2px);
+}
+
+#menu-screen.hidden {
+    display: none;
+}
+
+.menu-container {
+    text-align: center;
+    background: rgba(7,18,42,0.8);
+    padding: 60px 50px;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+    border: 2px solid rgba(255,209,102,0.2);
+}
+
+.menu-container h2 {
+    color: #ffd166;
+    font-size: 48px;
+    margin-bottom: 50px;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+}
+
+.menu-tabs {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.menu-tab {
+    padding: 16px 32px;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 12px;
+    border: 2px solid rgba(255,209,102,0.4);
+    background: rgba(255,209,102,0.1);
+    color: #fff;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.menu-tab:hover {
+    background: linear-gradient(90deg, #ffb366, #ff8a80);
+    color: #081122;
+    border-color: #ffd166;
+    transform: scale(1.05);
+}
+
+.menu-tab.active {
+    background: linear-gradient(90deg, #ffb366, #ff8a80);
+    color: #081122;
+    border-color: #ffd166;
+}
+
+/* Game Screen */
+#game-screen {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    z-index: 5;
+}
+
+#game-screen.active {
+    display: flex;
+}
+
+#game-area {
+    position: relative;
+    width: 480px;
+    height: 220px;
+    z-index: 2;
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.04));
+    border-radius: 12px;
+    padding: 30px 25px;
+    box-shadow: 0 10px 30px rgba(2,6,23,0.6);
+    margin: 20px auto;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-around;
+    border: 2px solid rgba(255,209,102,0.15);
+}
+
+.cup {
+    position: relative;
+    width: 110px;
+    height: 150px;
+    background: linear-gradient(135deg, #ff6b35 0%, #d2410c 30%, #8b2f0a 60%, #5a1d06 100%);
+    border-top: 8px solid rgba(255,200,100,0.15);
+    border-radius: 70px 70px 0 0;
+    cursor: pointer;
+    transition: transform 0.4s ease;
+    box-shadow: 
+        0 20px 40px rgba(0,0,0,0.8),
+        inset -15px -10px 25px rgba(0,0,0,0.5),
+        inset 8px 8px 15px rgba(255,255,255,0.08),
+        inset -5px -5px 20px rgba(0,0,0,0.3);
+    filter: drop-shadow(0 12px 20px rgba(0,0,0,0.7));
+    flex-shrink: 0;
+}
+
+.cup.lift {
+    transform: translateY(-100px);
+}
+
+.ball {
+    position: absolute;
+    bottom: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 35px;
+    height: 35px;
+    background: radial-gradient(circle at 30% 30%, #fff0b8, #f6c84a);
+    border-radius: 50%;
+    display: none;
+}
+
+#controls {
+    margin-top: 30px;
+    text-align: center;
+}
+
+button {
+    padding: 12px 32px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 20px;
+    border: none;
+    background: #ffd166;
+    color: #102a43;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+button:hover {
+    background: gold;
+    transform: scale(1.05);
+}
+
+#status {
+    margin-top: 20px;
+    font-weight: bold;
+    font-size: 18px;
+    color: #ffd166;
+}
+
+/* Difficulty selector */
+.difficulty {
+    margin-top: 15px;
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+.difficulty label { font-weight:600; margin-right:6px }
+.difficulty select {
+    padding: 6px 12px;
+    border-radius: 6px;
+    border: 1px solid #ffd166;
+    background: rgba(255,209,102,0.1);
+    color: #fff;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+#back-btn {
+    margin-top: 15px;
+    padding: 8px 20px;
+    font-size: 14px;
+    background: rgba(255,209,102,0.2);
+    border: 1px solid #ffd166;
+}
+
+#back-btn:hover {
+    background: rgba(255,209,102,0.4);
+}
+
+@media(min-width:900px){
+    #game-area { width: 700px; height: 260px; padding: 35px 30px }
+    .cup { width: 140px; height: 170px }
+}
+</style>
+</head>
+
+<body>
+
+<div class="market-lights" aria-hidden="true">
+    <div class="light" style="left:5%; top:10%; animation-duration:14s"></div>
+    <div class="light" style="left:75%; top:5%; width:300px; height:300px; animation-duration:18s"></div>
+    <div class="light" style="left:40%; top:55%; width:260px; height:260px; animation-duration:16s"></div>
+</div>
+
+<!-- Menu Screen -->
+<div id="menu-screen">
+    <div class="menu-container">
+        <h2>Mystic Shell Shuffle</h2>
+        <div class="menu-tabs">
+            <div class="menu-tab active" data-mode="game">Start Game</div>
+            <div class="menu-tab" data-mode="tutorial">Tutorial</div>
+            <div class="menu-tab" data-mode="ai">Game with AI</div>
+        </div>
+    </div>
+</div>
+
+<!-- Game Screen -->
+<div id="game-screen">
+    <h1>MYSTIC SHELL SHUFFLE</h1>
+    <div id="game-area"></div>
+    <div id="controls">
+        <button id="startBtn">START GAME</button>
+        <div class="difficulty" aria-hidden="false">
+            <label for="difficulty">Difficulty:</label>
+            <select id="difficulty" aria-label="Choose difficulty">
+                <option value="easy">Easy</option>
+                <option value="medium" selected>Medium</option>
+                <option value="hard">Hard</option>
+            </select>
+        </div>
+        <div id="status" aria-live="polite"></div>
+        <button id="back-btn">Back to Menu</button>
+    </div>
+</div>
+
+<script>
+let slots = [0, 1, 2];
+const ballCupId = 1;
+let canPick = false;
+let shuffling = false;
+let gameMode = 'game';
+
+const positions = [0, 155, 310];
+const gameArea = document.getElementById("game-area");
+const startBtn = document.getElementById("startBtn");
+const status = document.getElementById("status");
+const difficultySel = document.getElementById("difficulty");
+const menuScreen = document.getElementById("menu-screen");
+const gameScreen = document.getElementById("game-screen");
+const menuTabs = document.querySelectorAll(".menu-tab");
+const backBtn = document.getElementById("back-btn");
+
+// Menu functionality
+menuTabs.forEach(tab => {
+    tab.addEventListener("click", () => {
+        menuTabs.forEach(t => t.classList.remove("active"));
+        tab.classList.add("active");
+        gameMode = tab.dataset.mode;
+        
+        menuScreen.classList.add("hidden");
+        gameScreen.classList.add("active");
+        
+        initGame();
+    });
+});
+
+// Back to menu
+backBtn.addEventListener("click", () => {
+    menuScreen.classList.remove("hidden");
+    gameScreen.classList.remove("active");
+    gameArea.innerHTML = "";
+});
+
+function initGame() {
+    gameArea.innerHTML = "";
+    slots = [0, 1, 2];
+    canPick = false;
+    status.textContent = "";
+    startBtn.style.display = "inline-block";
+    startBtn.textContent = "START GAME";
+
+    slots.forEach((id, i) => {
+        const cup = document.createElement("div");
+        cup.className = "cup";
+        cup.id = "cup-" + id;
+
+        if (id === ballCupId) {
+            const ball = document.createElement("div");
+            ball.className = "ball";
+            ball.style.display = "none";
+            cup.appendChild(ball);
+        }
+
+        cup.onclick = () => pickCup(id);
+        gameArea.appendChild(cup);
+    });
+}
+
+async function shuffle() {
+    if (shuffling) return;
+    shuffling = true;
+    startBtn.style.display = "none";
+    status.textContent = "WATCH CLOSELY";
+
+    // adjust shuffle strength and speed by difficulty
+    const diff = difficultySel ? difficultySel.value : 'medium';
+    let rounds = 6, delay = 400;
+    if (diff === 'easy') { rounds = 4; delay = 700; }
+    else if (diff === 'hard') { rounds = 10; delay = 220; }
+
+    const cupElements = Array.from(document.querySelectorAll(".cup"));
+    
+    for (let i = 0; i < rounds; i++) {
+        let a = Math.floor(Math.random() * 3);
+        let b = Math.floor(Math.random() * 3);
+        while (a === b) b = Math.floor(Math.random() * 3);
+
+        [slots[a], slots[b]] = [slots[b], slots[a]];
+        
+        // Reorder cups in DOM to reflect new positions
+        const newOrder = slots.map(id => document.getElementById("cup-" + id));
+        gameArea.innerHTML = "";
+        newOrder.forEach(cup => gameArea.appendChild(cup));
+
+        await new Promise(r => setTimeout(r, delay));
+    }
+
+    status.textContent = "PICK A CUP";
+    canPick = true;
+    shuffling = false;
+}
+
+function pickCup(id) {
+    if (!canPick) return;
+    canPick = false;
+
+    document.querySelectorAll(".cup").forEach(cup => {
+        cup.classList.add("lift");
+        const ball = cup.querySelector(".ball");
+        if (ball) ball.style.display = "block";
+    });
+
+    status.textContent =
+        id === ballCupId ? "YOU WIN!" : "WRONG CUP!";
+
+    setTimeout(() => {
+        startBtn.textContent = "PLAY AGAIN";
+        startBtn.style.display = "inline-block";
+    }, 1500);
+}
+
+startBtn.onclick = () => {
+    initGame();
+    shuffle();
+};
+</script>
+
+</body>
+</html>

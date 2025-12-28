@@ -8,8 +8,10 @@
 body {
     margin: 0;
     height: 100vh;
-    background: #020617;
-    color: #f8fafc;
+    background: radial-gradient(ellipse at 20% 10%, rgba(255,180,100,0.06) 0%, transparent 20%),
+                radial-gradient(ellipse at 80% 30%, rgba(255,80,120,0.04) 0%, transparent 15%),
+                linear-gradient(180deg, #070617 0%, #07122a 60%);
+    color: #f1f5f9;
     font-family: Arial, sans-serif;
     display: flex;
     flex-direction: column;
@@ -18,25 +20,57 @@ body {
 }
 
 h1 {
-    color: gold;
+    color: #ffd166;
+    text-transform: uppercase;
+    letter-spacing: 6px;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.6), 0 0 14px rgba(255,200,90,0.12);
     margin-bottom: 40px;
+}
+
+/* Night-market decorative lights */
+.market-lights {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+}
+.light {
+    position: absolute;
+    width: 220px;
+    height: 220px;
+    background: radial-gradient(circle at 30% 30%, rgba(255,200,90,0.25), rgba(255,80,120,0.06) 40%, transparent 60%);
+    filter: blur(40px);
+    opacity: 0.9;
+    animation: float 12s ease-in-out infinite;
+}
+@keyframes float {
+    0% { transform: translateY(0) translateX(0) scale(1); }
+    50% { transform: translateY(-40px) translateX(30px) scale(1.05); }
+    100% { transform: translateY(0) translateX(0) scale(1); }
 }
 
 #game-area {
     position: relative;
     width: 420px;
-    height: 200px;
+    height: 220px;
+    z-index: 2;
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.04));
+    border-radius: 12px;
+    padding: 10px 12px 18px 12px;
+    box-shadow: 0 10px 30px rgba(2,6,23,0.6);
 }
 
 .cup {
     position: absolute;
     width: 110px;
     height: 150px;
-    background: #1e293b;
-    border-top: 6px solid #475569;
+    background: linear-gradient(180deg,#c2410c,#8b2f0a);
+    border-top: 6px solid rgba(255,255,255,0.06);
     border-radius: 70px 70px 0 0;
     cursor: pointer;
     transition: left 0.4s ease, transform 0.4s ease;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.6), inset 0 -8px 18px rgba(0,0,0,0.25);
 }
 
 .cup.lift {
@@ -50,7 +84,7 @@ h1 {
     transform: translateX(-50%);
     width: 35px;
     height: 35px;
-    background: gold;
+    background: radial-gradient(circle at 30% 30%, #fff0b8, #f6c84a);
     border-radius: 50%;
     display: none;
 }
@@ -66,7 +100,8 @@ button {
     font-weight: bold;
     border-radius: 20px;
     border: none;
-    background: goldenrod;
+    background: #ffd166;
+    color: #102a43;
     cursor: pointer;
 }
 
@@ -78,6 +113,41 @@ button:hover {
     margin-top: 15px;
     font-weight: bold;
 }
+
+/* Top navigation tabs */
+.top-nav {
+    position: fixed;
+    top: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 3;
+    display: flex;
+    gap: 10px;
+}
+.tab {
+    padding: 8px 14px;
+    background: rgba(255,255,255,0.04);
+    color: #fff;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+}
+.tab.active { background: linear-gradient(90deg,#ffb366,#ff8a80); color:#081122 }
+
+/* Difficulty selector */
+.difficulty {
+    margin-top: 12px;
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+}
+.difficulty label { font-weight:600; margin-right:6px }
+
+@media(min-width:900px){
+    #game-area { width: 700px; height: 260px }
+    .cup { width: 140px; height: 170px }
+}
 </style>
 </head>
 
@@ -85,11 +155,32 @@ button:hover {
 
 <h1>MYSTIC SHELLS</h1>
 
+<div class="top-nav" role="navigation" aria-label="Main tabs">
+    <div class="tab active">Play</div>
+    <div class="tab">Shop</div>
+    <div class="tab">Settings</div>
+    <div class="tab">Help</div>
+</div>
+
+<div class="market-lights" aria-hidden="true">
+    <div class="light" style="left:5%; top:10%; animation-duration:14s"></div>
+    <div class="light" style="left:75%; top:5%; width:300px; height:300px; animation-duration:18s"></div>
+    <div class="light" style="left:40%; top:55%; width:260px; height:260px; animation-duration:16s"></div>
+</div>
+
 <div id="game-area"></div>
 
 <div id="controls">
     <button id="startBtn">START GAME</button>
-    <div id="status"></div>
+    <div class="difficulty" aria-hidden="false">
+        <label for="difficulty">Difficulty:</label>
+        <select id="difficulty" aria-label="Choose difficulty">
+            <option value="easy">Easy</option>
+            <option value="medium" selected>Medium</option>
+            <option value="hard">Hard</option>
+        </select>
+    </div>
+    <div id="status" aria-live="polite"></div>
 </div>
 
 <script>
@@ -102,6 +193,7 @@ const positions = [0, 155, 310];
 const gameArea = document.getElementById("game-area");
 const startBtn = document.getElementById("startBtn");
 const status = document.getElementById("status");
+const difficultySel = document.getElementById("difficulty");
 
 function initGame() {
     gameArea.innerHTML = "";
@@ -133,7 +225,13 @@ async function shuffle() {
     startBtn.style.display = "none";
     status.textContent = "WATCH CLOSELY";
 
-    for (let i = 0; i < 6; i++) {
+    // adjust shuffle strength and speed by difficulty
+    const diff = difficultySel ? difficultySel.value : 'medium';
+    let rounds = 6, delay = 400;
+    if (diff === 'easy') { rounds = 4; delay = 700; }
+    else if (diff === 'hard') { rounds = 10; delay = 220; }
+
+    for (let i = 0; i < rounds; i++) {
         let a = Math.floor(Math.random() * 3);
         let b = Math.floor(Math.random() * 3);
         while (a === b) b = Math.floor(Math.random() * 3);
@@ -145,7 +243,7 @@ async function shuffle() {
                 positions[index] + "px";
         });
 
-        await new Promise(r => setTimeout(r, 400));
+        await new Promise(r => setTimeout(r, delay));
     }
 
     status.textContent = "PICK A CUP";

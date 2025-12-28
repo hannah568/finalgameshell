@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mystic Shell Shuffle</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<!-- Background decorative lights -->
+<div class="market-lights" aria-hidden="true">
+    <div class="light" style="left:5%; top:10%; animation-duration:14s"></div>
+    <div class="light" style="left:75%; top:5%; width:300px; height:300px; animation-duration:18s"></div>
+    <div class="light" style="left:40%; top:55%; width:260px; height:260px; animation-duration:16s"></div>
+    <!-- paper lanterns for a cartoon night market feel -->
+    <div class="lantern" style="left:15%; top:6%; --h:220px; --w:36px; --d:0.9;"></div>
+    <div class="lantern" style="left:35%; top:8%; --h:260px; --w:42px; --d:0.85;"></div>
+    <div class="lantern" style="left:60%; top:5%; --h:200px; --w:34px; --d:0.9;"></div>
+    <div class="lantern" style="left:82%; top:9%; --h:240px; --w:38px; --d:0.87;"></div>
+</div>
+<div id="menu-screen">
+    <div class="menu-container">
+        <div class="menu-title" style="margin-bottom:12px; display:flex; align-items:center; justify-content:center; gap:12px;">
+            <div class="title-ball-icon"></div>
+            <h2>Mystic Shell Shuffle</h2>
+        </div>
+        <div class="menu-tabs">
+            <div class="menu-tab active" data-mode="game">Start Game</div>
+            <div class="menu-tab" data-mode="tutorial">Tutorial</div>
+            <div class="menu-tab" data-mode="ai">Game with AI</div>
+            <div class="menu-tab" data-mode="shop">Shop</div>
+        </div>
+
+        <div style="margin-top:12px; display:flex; gap:8px; align-items:center; justify-content:center">
+            <label for="languageSel" style="color:#ffd166; font-weight:700">Language:</label>
+            <select id="languageSel" aria-label="Choose language">
+                <option value="en">English</option>
+                <option value="zh">中文 (繁體)</option>
+            </select>
+        </div>
+
+        <div id="shop-panel" class="shop-panel hidden">
+            <h3>Customize Appearance</h3>
+            <div class="shop-row">
+                <label>Cup Color:</label>
+                <input type="color" id="cupColor" value="#2a5f7a">
+                <label>Cup Style:</label>
+                <select id="cupStyle">
+                    <option value="gradient">Gradient</option>
+                    <option value="matte">Matte</option>
+                    <option value="striped">Striped</option>
+                </select>
+            </div>
+            <div class="shop-row">
+                <label>Ball Color:</label>
+                <input type="color" id="ballColor" value="#fff6c8">
+                <label>Ball Type:</label>
+                <select id="ballType">
+                    <option value="gloss">Gloss</option>
+                    <option value="matte">Matte</option>
+                    <option value="pattern">Pattern</option>
+                </select>
+            </div>
+            <div class="shop-row">
+                <label>Table:</label>
+                <select id="tableStyle">
+                    <option value="wood">Wood</option>
+                    <option value="cloth">Cloth</option>
+                    <option value="dark">Dark</option>
+                </select>
+                <label>Background:</label>
+                <select id="bgStyle">
+                    <option value="market">Night Market</option>
+                    <option value="neon">Neon</option>
+                    <option value="calm">Calm</option>
+                </select>
+            </div>
+            <div style="margin-top:14px; display:flex; gap:10px; justify-content:center;">
+                <button id="applyShop">Apply</button>
+                <button id="resetShop">Reset</button>
+            </div>
+        </div>
+
+        <div id="tutorial-panel" class="shop-panel hidden" style="max-width:520px;">
+            <h3>Tutorial</h3>
+            <div id="tutorial-en" class="tutorial-text">
+                <ol>
+                    <li>Look where the ball is under the cups when the preview appears.</li>
+                    <li>Click "START GAME" — the ball will be visible briefly, then cups will shuffle.</li>
+                    <li>Watch closely and click the cup you think hides the ball when shuffling ends.</li>
+                    <li>If you pick correctly you win; if not, the correct cup will be revealed.</li>
+                    <li>Difficulty affects shuffle speed and rounds. Winning increases shuffle rotation speed.</li>
+                </ol>
+                <p>Controls: Click a cup to choose it. Use the <strong>Shop</strong> to change cup/ball/table visuals.</p>
+                <p>Tip: On higher difficulty the cups spin faster — focus on the position, not the rotation.</p>
+            </div>
+            <div id="tutorial-zh" class="tutorial-text" style="display:none;">
+                <ol>
+                    <li>在預覽時先看球在哪個杯子下面。</li>
+                    <li>按「開始遊戲」，球會短暫顯示，然後杯子會開始洗牌。</li>
+                    <li>仔細觀看，洗牌結束後點選你認為球在的杯子。</li>
+                    <li>如果你選對了就會贏；若沒選對，正確的杯子會被揭示。</li>
+                    <li>難度會影響洗牌速度與回合數。每次勝利會增加旋轉速度，遊戲會越難。</li>
+                </ol>
+                <p>操作：點擊杯子選擇。使用<strong>商店</strong>可以更換杯子/球/桌面外觀。</p>
+                <p>提示：高難度時杯子會旋轉更快——專注位置而非旋轉。</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Game Screen -->
+<div id="game-screen">
+    <div class="title-wrapper">
+        <div class="title-ball-icon"></div>
+        <h1>Mystic Shell Shuffle</h1>
+    </div>
+    <div class="game-header">
+        <div class="score-panel" id="score-panel">
+            <div class="score-value" id="total-score">0000</div>
+        </div>
+    </div>
+    <div id="game-area"></div>
+    <div id="controls">
+        <button id="startBtn">START GAME</button>
+        <div class="difficulty" aria-hidden="false">
+            <label for="difficulty">Difficulty:</label>
+            <select id="difficulty" aria-label="Choose difficulty">
+                <option value="adaptive" selected>Adaptive</option>
+                <option value="easy">Easy</option>
+                <option value="medium">Medium</option>
+                <option value="hard">Hard</option>
+            </select>
+        </div>
+        <div id="status" aria-live="polite"></div>
+        <button id="back-btn">Back to Menu</button>
+    </div>
+</div>
+
+<script src="script.js"></script>
+
+<div id="credits">
+    白漢娜-HANNAH KEZIA<br>
+    BARGAMENTO
+</div>
+
+</body>
+</html>
