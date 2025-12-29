@@ -22,12 +22,12 @@ let aiMode = false;
 // i18n strings
 const i18n = {
     en: {
-        startTab: 'ENTER THE MARKET', tutorial: 'Tutorial', ai: 'Game with AI', shop: 'Shop',
+        startTab: 'ENTER THE MARKET', tutorial: 'TUTORIAL', ai: 'DEVELOPERS', shop: 'GAME RULES',
         startBtn: 'START GAME', playAgain: 'PLAY AGAIN', restart: 'RESTART', back: 'Back to Menu',
         watch: 'WATCH CLOSELY', pick: 'PICK A CUP', win: 'YOU WIN!', lose: 'WRONG CUP!'
     },
     zh: {
-        startTab: '開始遊戲', tutorial: '教學', ai: '與 AI 遊玩', shop: '商店',
+        startTab: '進入市場', tutorial: '教學', ai: '開發者', shop: '遊戲規則',
         startBtn: '開始遊戲', playAgain: '再玩一次', restart: '重新開始', back: '回主選單',
         watch: '仔細看', pick: '選一個杯子', win: '你贏了！', lose: '猜錯了！'
     }
@@ -40,7 +40,7 @@ const status = document.getElementById("status");
 const difficultySel = document.getElementById("difficulty");
 const menuScreen = document.getElementById("menu-screen");
 const gameScreen = document.getElementById("game-screen");
-const menuTabs = document.querySelectorAll(".menu-tab");
+const menuTabs = document.querySelectorAll(".menu-tab-btn");
 const backBtn = document.getElementById("back-btn");
 
 // Shop elements
@@ -55,6 +55,7 @@ const applyShop = document.getElementById('applyShop');
 const resetShop = document.getElementById('resetShop');
 const languageSel = document.getElementById('languageSel');
 const tutorialPanel = document.getElementById('tutorial-panel');
+const aiPanel = document.getElementById('ai-panel');
 const tutorialEn = document.getElementById('tutorial-en');
 const tutorialZh = document.getElementById('tutorial-zh');
 
@@ -121,18 +122,19 @@ menuTabs.forEach(tab => {
         }
 
         if (gameMode === 'ai') {
-            // start an AI match: show game and let AI play
+            // show developers info panel
+            aiPanel.classList.remove('hidden');
             shopPanel.classList.add('hidden');
             tutorialPanel.classList.add('hidden');
-            menuScreen.classList.add('hidden');
-            gameScreen.classList.add('active');
-            startAIMatch();
+            menuScreen.classList.remove('hidden');
+            gameScreen.classList.remove('active');
             return;
         }
 
-        // fallback for other tabs (tutorial/shop handled above): keep menu visible and hide panels
+        // fallback for other tabs: keep menu visible and hide panels
         shopPanel.classList.add('hidden');
         tutorialPanel.classList.add('hidden');
+        aiPanel.classList.add('hidden');
         menuScreen.classList.remove('hidden');
         gameScreen.classList.remove('active');
     });
@@ -144,10 +146,9 @@ function setLanguage(to) {
     localStorage.setItem('mystic_lang', lang);
     const t = i18n[lang] || i18n.en;
     // update menu tab texts (in order)
-    const tabs = document.querySelectorAll('.menu-tab');
-    const langNames = { en: 'ENGLISH', zh: '中文' };
+    const tabs = document.querySelectorAll('.menu-tab-btn');
     if (tabs[0]) tabs[0].textContent = t.startTab;
-    if (tabs[1]) tabs[1].textContent = `SETTINGS: ${langNames[lang] || lang.toUpperCase()}`;
+    if (tabs[1]) tabs[1].textContent = t.tutorial;
     if (tabs[2]) tabs[2].textContent = t.ai;
     if (tabs[3]) tabs[3].textContent = t.shop;
     // controls
