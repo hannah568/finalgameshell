@@ -88,12 +88,20 @@ h1 {
 
 .hidden { display: none; }
 
-.shop-panel { margin-top:14px; text-align:left; color:#fff }
-.shop-row{ display:flex; gap:12px; align-items:center; margin:8px 0 }
+.shop-panel { margin-top:14px; text-align:left; color:#fff; max-width:480px; margin-left:auto; margin-right:auto }
+.shop-panel h3 { color:#ffd166; margin-top:0; margin-bottom:12px }
+#tutorial-panel { max-width:520px !important; }
+.shop-row{ display:flex; gap:12px; align-items:center; margin:10px 0; flex-wrap:wrap }
+.shop-row label { min-width:100px; font-weight:600 }
+.shop-row input[type="color"] { width:50px; height:40px; border:1px solid rgba(255,209,102,0.3); border-radius:6px; cursor:pointer }
+.shop-row select { padding:6px 10px; border-radius:6px; border:1px solid rgba(255,209,102,0.3); background:rgba(255,209,102,0.08); color:#fff; font-weight:600; cursor:pointer; flex:1; min-width:120px }
 
 .tutorial-text { font-size:14px; line-height:1.5; color:#eef2ff }
 .tutorial-text ol { padding-left:18px; margin:6px 0 }
 .tutorial-text p { margin:8px 0 }
+
+.shop-panel button { margin:0 6px }
+#languageSel { padding:6px 10px; border-radius:6px; border:1px solid rgba(255,209,102,0.3); background:rgba(255,209,102,0.08); color:#fff; font-weight:600; cursor:pointer }
 
 #credits {
     position: fixed;
@@ -166,6 +174,8 @@ h1 {
     border-radius: 14px;
     box-shadow: 0 20px 70px rgba(0,0,0,0.75);
     border: 1px solid rgba(255,209,102,0.12);
+    max-height: 85vh;
+    overflow-y: auto;
 }
 
 .menu-container h2 {
@@ -265,5 +275,9 @@ button:hover{ transform:scale(1.03); background:linear-gradient(90deg,#ffd166,#f
 
 #back-btn{ margin-top:12px; padding:8px 18px; font-size:13px; background:rgba(255,209,102,0.12); border:1px solid rgba(255,209,102,0.14); border-radius:10px }
 #back-btn:hover{ background:rgba(255,209,102,0.3) }
+
+.game-header { position:absolute; top:12px; right:20px; z-index:8 }
+.score-panel { background:rgba(7,18,42,0.6); padding:8px 16px; border-radius:10px; border:1px solid rgba(255,209,102,0.2); }
+.score-value { font-size:24px; font-weight:700; color:#ffd166; font-family:monospace; letter-spacing:2px }
 
 @media(min-width:900px){ #game-area{ width:760px; height:260px; padding:34px } .cup{ width:150px; height:178px } }

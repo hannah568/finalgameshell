@@ -4,13 +4,25 @@
 <meta charset="UTF-8">
 <title>Mystic Shells</title>
 
+<!-- Google font for arcade-style headings -->
+<link href="https://fonts.googleapis.com/css2?family=Bangers&family=Roboto:wght@400;700;900&display=swap" rel="stylesheet">
+
 <style>
+html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background: radial-gradient(circle at 50% 50%, rgba(255,200,100,0.15) 0%, rgba(255,140,50,0.05) 15%, transparent 30%),
+                radial-gradient(circle at 35% 25%, rgba(255,180,80,0.08) 0%, transparent 25%),
+                linear-gradient(180deg, #1a0f0a 0%, #2d1810 40%, #1a0f0a 100%);
+    background-attachment: fixed;
+}
+
 body {
     margin: 0;
+    padding: 0;
     height: 100vh;
-    background: radial-gradient(ellipse at 20% 10%, rgba(255,180,100,0.06) 0%, transparent 20%),
-                radial-gradient(ellipse at 80% 30%, rgba(255,80,120,0.04) 0%, transparent 15%),
-                linear-gradient(180deg, #0b074d 0%, #0d2b6d 60%);
+    background: transparent;
     color: #f1f5f9;
     font-family: Arial, sans-serif;
     display: flex;
@@ -18,6 +30,7 @@ body {
     align-items: center;
     justify-content: center;
     overflow-x: hidden;
+    position: relative;
 }
 
 h1 {
@@ -30,6 +43,100 @@ h1 {
     margin-bottom: 40px;
     margin-top: 0;
     z-index: 10;
+}
+
+/* Splash Screen */
+#splash-screen {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    backdrop-filter: blur(2px);
+    position: relative;
+}
+
+#splash-screen.hidden {
+    display: none;
+}
+
+.splash-container {
+    text-align: center;
+    position: relative;
+    z-index: 10;
+}
+
+.splash-title {
+    color: #FFD700;
+    text-transform: uppercase;
+    letter-spacing: 16px;
+    font-size: 84px;
+    font-weight: 900;
+    text-shadow: 
+        0 0 10px #FFD700,
+        0 0 20px #FFC700,
+        0 0 30px #FFB700,
+        0 0 40px #FFA700,
+        0 0 60px rgba(255,200,0,0.8),
+        0 0 80px rgba(255,180,0,0.6),
+        0 0 100px rgba(255,160,0,0.4);
+    margin: 0 0 30px 0;
+    animation: glow-pulse 2.5s ease-in-out infinite;
+    filter: brightness(1.2);
+}
+
+@keyframes glow-pulse {
+    0%, 100% { 
+        text-shadow: 
+            0 0 10px #FFD700,
+            0 0 20px #FFC700,
+            0 0 30px #FFB700,
+            0 0 40px #FFA700,
+            0 0 60px rgba(255,200,0,0.8),
+            0 0 80px rgba(255,180,0,0.6),
+            0 0 100px rgba(255,160,0,0.4);
+    }
+    50% { 
+        text-shadow: 
+            0 0 20px #FFD700,
+            0 0 40px #FFC700,
+            0 0 60px #FFB700,
+            0 0 80px #FFA700,
+            0 0 100px rgba(255,200,0,1),
+            0 0 120px rgba(255,180,0,0.8),
+            0 0 150px rgba(255,160,0,0.6);
+    }
+}
+
+.splash-subtitle {
+    color: #b0b0c0;
+    font-size: 18px;
+    letter-spacing: 4px;
+    margin-bottom: 60px;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+#enter-btn {
+    padding: 18px 50px;
+    font-size: 20px;
+    font-weight: bold;
+    border-radius: 30px;
+    border: none;
+    background: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%);
+    color: #fff;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 30px rgba(168, 85, 247, 0.4);
+}
+
+#enter-btn:hover {
+    background: linear-gradient(135deg, #a855f7 0%, #d946ef 100%);
+    transform: scale(1.05);
+    box-shadow: 0 15px 40px rgba(217, 70, 239, 0.6);
 }
 
 /* Night-market decorative lights */
@@ -61,66 +168,98 @@ h1 {
     inset: 0;
     z-index: 100;
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
-    background: radial-gradient(ellipse at 20% 10%, rgba(255,180,100,0.06) 0%, transparent 20%),
-                radial-gradient(ellipse at 80% 30%, rgba(255,80,120,0.04) 0%, transparent 15%),
-                linear-gradient(180deg, #070617 0%, #07122a 60%);
+    background: transparent;
     backdrop-filter: blur(2px);
-}
-
-#menu-screen.hidden {
-    display: none;
 }
 
 .menu-container {
     text-align: center;
-    background: rgba(7,18,42,0.8);
-    padding: 60px 50px;
-    border-radius: 20px;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.8);
-    border: 2px solid rgba(255,209,102,0.2);
+    background: linear-gradient(180deg,#3a7fb0 0%, #2b6aa3 60%);
+    padding: 40px 44px;
+    border-radius: 28px;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.85), inset 0 6px 10px rgba(255,255,255,0.02);
+    border: 6px solid rgba(0,0,0,0.95);
+    width: 760px;
+    max-width: calc(100vw - 64px);
 }
 
 .menu-container h2 {
-    color: #ffd166;
-    font-size: 48px;
-    margin-bottom: 50px;
+    color: #FFD700;
+    font-size: 56px;
+    margin-bottom: 36px;
     text-transform: uppercase;
     letter-spacing: 4px;
+    text-shadow: 0 6px 0 #000, 0 0 14px rgba(255,200,100,0.6), 0 0 28px rgba(255,150,50,0.4);
+    font-family: 'Bangers', 'Roboto', Arial, sans-serif;
 }
 
 .menu-tabs {
     display: flex;
+    flex-direction: column; /* vertical stack */
     gap: 20px;
+    align-items: center;
     justify-content: center;
-    flex-wrap: wrap;
+    width: 100%;
 }
+
+/* Panel shell layout to mimic reference background */
+.panel-shell {
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap: 24px;
+    width: 100%;
+    background: linear-gradient(135deg, #3b82f6, #1e40af);
+    border-radius: 28px;
+    padding: 36px 28px;
+    box-shadow: 0 25px 60px rgba(0,0,0,0.8);
+    border: 5px solid rgba(0,0,0,0.7);
+}
+.panel-center{ flex: 0 0 520px; }
+.panel-decor{ display:flex; flex-direction:column; gap:28px; align-items:center; width:80px }
+.panel-decor .icon{ font-size:42px; opacity:0.95 }
 
 .menu-tab {
-    padding: 16px 32px;
-    font-size: 18px;
-    font-weight: bold;
-    border-radius: 12px;
-    border: 2px solid rgba(255,209,102,0.4);
-    background: rgba(255,209,102,0.1);
+    padding: 18px 36px;
+    font-size: 28px;
+    font-weight: 900;
+    border-radius: 10px;
+    border: 4px solid #000; /* thick black border */
+    background: linear-gradient(135deg, #3b82f6, #1e3a8a); /* default secondary blue */
     color: #fff;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: transform 160ms ease, box-shadow 160ms ease;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    width: 600px;
+    max-width: 100%;
+    height: 72px;
+    box-shadow: 0 12px 0 rgba(0,0,0,0.95); /* deeper shadow */
 }
 
-.menu-tab:hover {
-    background: linear-gradient(90deg, #ffb366, #ff8a80);
-    color: #081122;
-    border-color: #ffd166;
-    transform: scale(1.05);
+.menu-tab:hover { transform: translateY(-3px); box-shadow: 0 8px 0 rgba(0,0,0,0.95); }
+
+/* Primary style (gold) */
+.menu-tab.primary {
+    background: linear-gradient(135deg, #FFD700, #FFA500);
+    color: #1a0f0a;
+    border-color: #000;
+    font-size: 36px;
+    letter-spacing: 3px;
+    text-shadow: 0 4px 0 #000, 0 6px 14px rgba(255,180,0,0.35);
+    box-shadow: 0 16px 0 rgba(0,0,0,0.95), 0 26px 60px rgba(255,150,50,0.12);
 }
 
-.menu-tab.active {
-    background: linear-gradient(90deg, #ffb366, #ff8a80);
-    color: #081122;
-    border-color: #ffd166;
+/* Active visual */
+.menu-tab.active { transform: translateY(-4px); box-shadow: 0 12px 0 rgba(0,0,0,0.95); }
+
+.menu-tab.secondary { 
+    background: linear-gradient(135deg, #3b82f6, #1e3a8a); 
+    color: #fff; 
+    font-size: 26px;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.6);
 }
 
 /* Game Screen */
@@ -131,6 +270,8 @@ h1 {
     justify-content: center;
     height: 100vh;
     z-index: 5;
+    background: transparent;
+    position: relative;
 }
 
 #game-screen.active {
@@ -142,15 +283,17 @@ h1 {
     width: 480px;
     height: 220px;
     z-index: 2;
-    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.04));
+    background: radial-gradient(ellipse at 50% 50%, rgba(255,150,50,0.2) 0%, rgba(100,50,20,0.4) 50%, rgba(30,15,5,0.8) 100%);
     border-radius: 12px;
     padding: 30px 25px;
-    box-shadow: 0 10px 30px rgba(2,6,23,0.6);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.8),
+                0 0 30px rgba(255,150,50,0.3),
+                inset 0 0 20px rgba(255,100,0,0.1);
     margin: 20px auto;
     display: flex;
     align-items: flex-end;
     justify-content: space-around;
-    border: 2px solid rgba(255,209,102,0.15);
+    border: 2px solid rgba(255,150,80,0.3);
 }
 
 .cup {
@@ -251,6 +394,108 @@ button:hover {
     #game-area { width: 700px; height: 260px; padding: 35px 30px }
     .cup { width: 140px; height: 170px }
 }
+
+/* Selection Screens */
+.selection-screen {
+    position: fixed;
+    inset: 0;
+    z-index: 150;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+}
+
+.selection-screen.active {
+    display: flex;
+}
+
+.selection-screen.hidden {
+    display: none;
+}
+
+.selection-container {
+    text-align: center;
+    background: rgba(20, 10, 5, 0.85);
+    padding: 60px 50px;
+    border-radius: 20px;
+    box-shadow: 0 20px 80px rgba(0,0,0,0.9),
+                0 0 40px rgba(255,150,50,0.2),
+                inset 0 0 30px rgba(255,200,100,0.1);
+    border: 2px solid rgba(255,150,80,0.3);
+    position: relative;
+    z-index: 10;
+    max-width: 600px;
+}
+
+.selection-container h3 {
+    color: #FFD700;
+    font-size: 36px;
+    margin-bottom: 40px;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    text-shadow: 0 0 10px rgba(255,200,100,0.6),
+                 0 0 20px rgba(255,150,50,0.4);
+}
+
+.selection-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 30px;
+}
+
+.selection-btn {
+    padding: 15px 30px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 15px;
+    border: 2px solid rgba(255,150,80,0.5);
+    background: rgba(255,200,100,0.1);
+    color: #FFD700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+}
+
+.selection-btn:hover {
+    background: linear-gradient(135deg, #FFD700, #FFC700);
+    color: #1a0f0a;
+    border-color: #FFD700;
+    transform: scale(1.05);
+}
+
+.selection-btn.active {
+    background: linear-gradient(135deg, #FFD700, #FFC700);
+    color: #1a0f0a;
+    border-color: #FFD700;
+    box-shadow: 0 0 20px rgba(255,215,0,0.5);
+}
+
+.continue-btn {
+    padding: 15px 40px;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 20px;
+    border: none;
+    background: linear-gradient(135deg, #FFD700, #FFC700);
+    color: #1a0f0a;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+}
+
+.continue-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 30px rgba(255,215,0,0.6);
+}
+
+.continue-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
 </style>
 </head>
 
@@ -262,14 +507,156 @@ button:hover {
     <div class="light" style="left:40%; top:55%; width:260px; height:260px; animation-duration:16s"></div>
 </div>
 
+<!-- Splash Screen -->
+<div id="splash-screen">
+    <div class="splash-container">
+        <div class="splash-title">MYSTIC SHELL SHUFFLE</div>
+        <div class="splash-subtitle">Sleight of Hand Awaits</div>
+        <button id="enter-btn">Enter the Game</button>
+    </div>
+</div>
+
+<!-- Language Selection Screen -->
+<div id="language-screen" class="selection-screen">
+    <div class="selection-container">
+        <h3>Select Language</h3>
+        <div class="selection-buttons">
+            <button class="selection-btn" data-lang="en">English</button>
+            <button class="selection-btn" data-lang="zh">中文 (Traditional)</button>
+        </div>
+        <button class="continue-btn" id="lang-continue-btn" disabled>Continue</button>
+    </div>
+</div>
+
+<!-- Player Selection Screen -->
+<div id="player-screen" class="selection-screen">
+    <div class="selection-container">
+        <h3>Select Players</h3>
+        <div class="selection-buttons">
+            <button class="selection-btn" data-players="1">Solo</button>
+            <button class="selection-btn" data-players="2">Pair</button>
+            <button class="selection-btn" data-players="3">3 Players</button>
+            <button class="selection-btn" data-players="4">4 Players</button>
+        </div>
+        <button class="continue-btn" id="player-continue-btn" disabled>Continue</button>
+    </div>
+</div>
+
+<!-- Difficulty Selection Screen -->
+<div id="difficulty-screen" class="selection-screen">
+    <div class="selection-container">
+        <h3>Select Difficulty</h3>
+        <div class="selection-buttons">
+            <button class="selection-btn" data-difficulty="easy">Easy</button>
+            <button class="selection-btn" data-difficulty="medium">Medium</button>
+            <button class="selection-btn" data-difficulty="hard">Difficult</button>
+            <button class="selection-btn" data-difficulty="adaptive">Adaptive</button>
+        </div>
+        <button class="continue-btn" id="difficulty-continue-btn" disabled>Start Game</button>
+    </div>
+</div>
+
 <!-- Menu Screen -->
-<div id="menu-screen">
+<div id="menu-screen" class="hidden">
     <div class="menu-container">
         <h2>Mystic Shell Shuffle</h2>
-        <div class="menu-tabs">
-            <div class="menu-tab active" data-mode="game">Start Game</div>
-            <div class="menu-tab" data-mode="tutorial">Tutorial</div>
-            <div class="menu-tab" data-mode="ai">Game with AI</div>
+        <div class="panel-shell">
+            <div class="panel-decor left">
+                <div class="icon">🐻</div>
+                <div class="icon">🚗</div>
+                <div class="icon">🎪</div>
+            </div>
+
+            <div class="panel-center">
+                <div class="menu-tabs">
+                    <div class="menu-tab primary active" data-mode="game">ENTER THE MARKET</div>
+                    <div class="menu-tab secondary" data-mode="settings">SETTINGS: ENGLISH</div>
+                    <div class="menu-tab secondary" data-mode="ai">Developers</div>
+                    <div class="menu-tab secondary" data-mode="shop">Game Rules</div>
+                </div>
+            </div>
+
+            <div class="panel-decor right">
+                <div class="icon">🦆</div>
+                <div class="icon">🎈</div>
+                <div class="icon">🎯</div>
+            </div>
+        </div>
+
+        <div style="margin-top:12px; display:flex; gap:8px; align-items:center; justify-content:center">
+            <label for="languageSel" style="color:#ffd166; font-weight:700">Language:</label>
+            <select id="languageSel" aria-label="Choose language">
+                <option value="en">English</option>
+                <option value="zh">中文 (繁體)</option>
+            </select>
+        </div>
+        
+        <div id="shop-panel" class="shop-panel hidden">
+            <h3>Customize Appearance</h3>
+            <div class="shop-row">
+                <label>Cup Color:</label>
+                <input type="color" id="cupColor" value="#2a5f7a">
+                <label>Cup Style:</label>
+                <select id="cupStyle">
+                    <option value="gradient">Gradient</option>
+                    <option value="matte">Matte</option>
+                    <option value="striped">Striped</option>
+                </select>
+            </div>
+            <div class="shop-row">
+                <label>Ball Color:</label>
+                <input type="color" id="ballColor" value="#fff6c8">
+                <label>Ball Type:</label>
+                <select id="ballType">
+                    <option value="gloss">Gloss</option>
+                    <option value="matte">Matte</option>
+                    <option value="pattern">Pattern</option>
+                </select>
+            </div>
+            <div class="shop-row">
+                <label>Table:</label>
+                <select id="tableStyle">
+                    <option value="wood">Wood</option>
+                    <option value="cloth">Cloth</option>
+                    <option value="dark">Dark</option>
+                </select>
+                <label>Background:</label>
+                <select id="bgStyle">
+                    <option value="market">Night Market</option>
+                    <option value="neon">Neon</option>
+                    <option value="calm">Calm</option>
+                </select>
+            </div>
+            <div style="margin-top:14px; display:flex; gap:10px; justify-content:center;">
+                <button id="applyShop">Apply</button>
+                <button id="resetShop">Reset</button>
+            </div>
+        </div>
+
+        <div id="tutorial-panel" class="shop-panel hidden">
+            <h3>Tutorial</h3>
+            <div id="tutorial-en" class="tutorial-text">
+                <ol>
+                    <li>Look where the ball is under the cups when the preview appears.</li>
+                    <li>Click "START GAME" — the ball will be visible briefly, then cups will shuffle.</li>
+                    <li>Watch closely and click the cup you think hides the ball when shuffling ends.</li>
+                    <li>If you pick correctly you win; if not, the correct cup will be revealed.</li>
+                    <li>Difficulty affects shuffle speed and rounds. Winning increases shuffle rotation speed.</li>
+                </ol>
+                <p>Controls: Click a cup to choose it. Use the <strong>Shop</strong> to change cup/ball/table visuals.</p>
+                <p>Tip: On higher difficulty the cups spin faster — focus on the position, not the rotation.</p>
+            </div>
+            <div id="tutorial-zh" class="tutorial-text" style="display:none;">
+                <ol>
+                    <li>在預覽時先看球在哪個杯子下面。</li>
+                    <li>按「開始遊戲」，球會短暫顯示，然後杯子會開始洗牌。</li>
+                    <li>仔細觀看，洗牌結束後點選你認為球在的杯子。</li>
+                    <li>如果你選對了就會贏；若沒選對，正確的杯子會被揭示。</li>
+                    <li>難度會影響洗牌速度與回合數。每次勝利會增加旋轉速度，遊戲會越難。</li>
+                </ol>
+                <p>操作：點擊杯子選擇。使用<strong>商店</strong>可以更換杯子/球/桌面外觀。</p>
+                <p>提示：高難度時杯子會旋轉更快——專注位置而非旋轉。</p>
+            </div>
         </div>
     </div>
 </div>
@@ -277,15 +664,21 @@ button:hover {
 <!-- Game Screen -->
 <div id="game-screen">
     <h1>MYSTIC SHELL SHUFFLE</h1>
+    <div class="game-header">
+        <div class="score-panel" id="score-panel">
+            <div class="score-value" id="total-score">0000</div>
+        </div>
+    </div>
     <div id="game-area"></div>
     <div id="controls">
         <button id="startBtn">START GAME</button>
         <div class="difficulty" aria-hidden="false">
             <label for="difficulty">Difficulty:</label>
             <select id="difficulty" aria-label="Choose difficulty">
+                <option value="adaptive" selected>Adaptive</option>
                 <option value="easy">Easy</option>
-                <option value="medium" selected>Medium</option>
-                <option value="hard">Hard</option>
+                <option value="medium">Medium</option>
+                <option value="hard">Difficult</option>
             </select>
         </div>
         <div id="status" aria-live="polite"></div>
@@ -293,127 +686,7 @@ button:hover {
     </div>
 </div>
 
-<script>
-let slots = [0, 1, 2];
-const ballCupId = 1;
-let canPick = false;
-let shuffling = false;
-let gameMode = 'game';
-
-const positions = [0, 155, 310];
-const gameArea = document.getElementById("game-area");
-const startBtn = document.getElementById("startBtn");
-const status = document.getElementById("status");
-const difficultySel = document.getElementById("difficulty");
-const menuScreen = document.getElementById("menu-screen");
-const gameScreen = document.getElementById("game-screen");
-const menuTabs = document.querySelectorAll(".menu-tab");
-const backBtn = document.getElementById("back-btn");
-
-// Menu functionality
-menuTabs.forEach(tab => {
-    tab.addEventListener("click", () => {
-        menuTabs.forEach(t => t.classList.remove("active"));
-        tab.classList.add("active");
-        gameMode = tab.dataset.mode;
-        
-        menuScreen.classList.add("hidden");
-        gameScreen.classList.add("active");
-        
-        initGame();
-    });
-});
-
-// Back to menu
-backBtn.addEventListener("click", () => {
-    menuScreen.classList.remove("hidden");
-    gameScreen.classList.remove("active");
-    gameArea.innerHTML = "";
-});
-
-function initGame() {
-    gameArea.innerHTML = "";
-    slots = [0, 1, 2];
-    canPick = false;
-    status.textContent = "";
-    startBtn.style.display = "inline-block";
-    startBtn.textContent = "START GAME";
-
-    slots.forEach((id, i) => {
-        const cup = document.createElement("div");
-        cup.className = "cup";
-        cup.id = "cup-" + id;
-
-        if (id === ballCupId) {
-            const ball = document.createElement("div");
-            ball.className = "ball";
-            ball.style.display = "none";
-            cup.appendChild(ball);
-        }
-
-        cup.onclick = () => pickCup(id);
-        gameArea.appendChild(cup);
-    });
-}
-
-async function shuffle() {
-    if (shuffling) return;
-    shuffling = true;
-    startBtn.style.display = "none";
-    status.textContent = "WATCH CLOSELY";
-
-    // adjust shuffle strength and speed by difficulty
-    const diff = difficultySel ? difficultySel.value : 'medium';
-    let rounds = 6, delay = 400;
-    if (diff === 'easy') { rounds = 4; delay = 700; }
-    else if (diff === 'hard') { rounds = 10; delay = 220; }
-
-    const cupElements = Array.from(document.querySelectorAll(".cup"));
-    
-    for (let i = 0; i < rounds; i++) {
-        let a = Math.floor(Math.random() * 3);
-        let b = Math.floor(Math.random() * 3);
-        while (a === b) b = Math.floor(Math.random() * 3);
-
-        [slots[a], slots[b]] = [slots[b], slots[a]];
-        
-        // Reorder cups in DOM to reflect new positions
-        const newOrder = slots.map(id => document.getElementById("cup-" + id));
-        gameArea.innerHTML = "";
-        newOrder.forEach(cup => gameArea.appendChild(cup));
-
-        await new Promise(r => setTimeout(r, delay));
-    }
-
-    status.textContent = "PICK A CUP";
-    canPick = true;
-    shuffling = false;
-}
-
-function pickCup(id) {
-    if (!canPick) return;
-    canPick = false;
-
-    document.querySelectorAll(".cup").forEach(cup => {
-        cup.classList.add("lift");
-        const ball = cup.querySelector(".ball");
-        if (ball) ball.style.display = "block";
-    });
-
-    status.textContent =
-        id === ballCupId ? "YOU WIN!" : "WRONG CUP!";
-
-    setTimeout(() => {
-        startBtn.textContent = "PLAY AGAIN";
-        startBtn.style.display = "inline-block";
-    }, 1500);
-}
-
-startBtn.onclick = () => {
-    initGame();
-    shuffle();
-};
-</script>
+<script src="script.js"></script>
 
 </body>
 </html>

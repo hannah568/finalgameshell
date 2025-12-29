@@ -7,6 +7,11 @@ let gameMode = 'game';
 
 let positions = [];
 
+// Game setup variables
+let selectedLanguage = null;
+let selectedPlayers = null;
+let selectedDifficulty = null;
+
 // persistence: wins, streak, total score, and language
 let winsCount = parseInt(localStorage.getItem('mystic_wins') || '0', 10);
 let currentStreak = parseInt(localStorage.getItem('mystic_streak') || '0', 10);
@@ -17,7 +22,7 @@ let aiMode = false;
 // i18n strings
 const i18n = {
     en: {
-        startTab: 'Start Game', tutorial: 'Tutorial', ai: 'Game with AI', shop: 'Shop',
+        startTab: 'ENTER THE MARKET', tutorial: 'Tutorial', ai: 'Game with AI', shop: 'Shop',
         startBtn: 'START GAME', playAgain: 'PLAY AGAIN', restart: 'RESTART', back: 'Back to Menu',
         watch: 'WATCH CLOSELY', pick: 'PICK A CUP', win: 'YOU WIN!', lose: 'WRONG CUP!'
     },
@@ -92,14 +97,26 @@ menuTabs.forEach(tab => {
             return;
         }
 
+        if (gameMode === 'settings') {
+            // show settings controls (language) in menu
+            shopPanel.classList.add('hidden');
+            tutorialPanel.classList.add('hidden');
+            menuScreen.classList.remove('hidden');
+            gameScreen.classList.remove('active');
+            if (languageSel) languageSel.focus();
+            return;
+        }
+
         if (gameMode === 'tutorial') {
             tutorialPanel.classList.remove('hidden');
             shopPanel.classList.add('hidden');
             menuScreen.classList.remove('hidden');
             gameScreen.classList.remove('active');
             // show correct language inside tutorial
-            if (lang === 'zh') { tutorialEn.style.display = 'none'; tutorialZh.style.display = ''; }
-            else { tutorialEn.style.display = ''; tutorialZh.style.display = 'none'; }
+            if (tutorialEn && tutorialZh) {
+                if (lang === 'zh') { tutorialEn.style.display = 'none'; tutorialZh.style.display = ''; }
+                else { tutorialEn.style.display = ''; tutorialZh.style.display = 'none'; }
+            }
             return;
         }
 
@@ -128,8 +145,9 @@ function setLanguage(to) {
     const t = i18n[lang] || i18n.en;
     // update menu tab texts (in order)
     const tabs = document.querySelectorAll('.menu-tab');
+    const langNames = { en: 'ENGLISH', zh: '中文' };
     if (tabs[0]) tabs[0].textContent = t.startTab;
-    if (tabs[1]) tabs[1].textContent = t.tutorial;
+    if (tabs[1]) tabs[1].textContent = `SETTINGS: ${langNames[lang] || lang.toUpperCase()}`;
     if (tabs[2]) tabs[2].textContent = t.ai;
     if (tabs[3]) tabs[3].textContent = t.shop;
     // controls
@@ -361,8 +379,7 @@ function aiPick() {
     setTimeout(() => pickCup(choice), 700 + Math.floor(Math.random()*600));
 }
 
-// Initialize game on page load
-initGame();
+// Initialize UI state on page load (defer creating cups until game start)
 updateScoreDisplay();
 
 // Shop apply/reset handlers
@@ -436,5 +453,97 @@ function resetShopSettings() {
     initGame();
 }
 
-applyShop.addEventListener('click', applyShopSettings);
-resetShop.addEventListener('click', resetShopSettings);
+if (applyShop) applyShop.addEventListener('click', applyShopSettings);
+if (resetShop) resetShop.addEventListener('click', resetShopSettings);
+
+// ===== NEW GAME FLOW: Splash -> Language -> Players -> Difficulty -> Game =====
+
+const splashScreen = document.getElementById('splash-screen');
+const languageScreen = document.getElementById('language-screen');
+const playerScreen = document.getElementById('player-screen');
+const difficultyScreen = document.getElementById('difficulty-screen');
+const enterBtn = document.getElementById('enter-btn');
+
+// Splash Screen -> Language Screen
+if (enterBtn) {
+    enterBtn.addEventListener('click', () => {
+        splashScreen.classList.add('hidden');
+        languageScreen.classList.add('active');
+    });
+}
+
+// Language Selection
+const langButtons = document.querySelectorAll('#language-screen .selection-btn');
+const langContinueBtn = document.getElementById('lang-continue-btn');
+
+langButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+        langButtons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        selectedLanguage = btn.dataset.lang;
+        langContinueBtn.disabled = false;
+    });
+});
+
+langContinueBtn.addEventListener('click', () => {
+    if (selectedLanguage) {
+        lang = selectedLanguage;
+        localStorage.setItem('mystic_lang', lang);
+        setLanguage(lang);
+        languageScreen.classList.remove('active');
+        playerScreen.classList.add('active');
+    }
+});
+
+// Player Selection
+const playerButtons = document.querySelectorAll('#player-screen .selection-btn');
+const playerContinueBtn = document.getElementById('player-continue-btn');
+
+playerButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+        playerButtons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        selectedPlayers = btn.dataset.players;
+        playerContinueBtn.disabled = false;
+    });
+});
+
+playerContinueBtn.addEventListener('click', () => {
+    if (selectedPlayers) {
+        playerScreen.classList.remove('active');
+        difficultyScreen.classList.add('active');
+    }
+});
+
+// Difficulty Selection
+const difficultyButtons = document.querySelectorAll('#difficulty-screen .selection-btn');
+const difficultyContinueBtn = document.getElementById('difficulty-continue-btn');
+
+difficultyButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+        difficultyButtons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        selectedDifficulty = btn.dataset.difficulty;
+        difficultyContinueBtn.disabled = false;
+    });
+});
+
+difficultyContinueBtn.addEventListener('click', () => {
+    if (selectedDifficulty) {
+        // Set difficulty
+        if (difficultySel) {
+            difficultySel.value = selectedDifficulty;
+        }
+        
+        // Start the game
+        difficultyScreen.classList.remove('active');
+        menuScreen.classList.add('hidden');
+        gameScreen.classList.add('active');
+        initGame();
+        
+        // Auto-start the game after a brief moment
+        setTimeout(() => {
+            shuffle();
+        }, 500);
+    }
+});
